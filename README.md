@@ -2,7 +2,7 @@
 RTC Calibration of the DS3231M contained in some MatrixClocks using NTP or a GPS PPS signal.
 
 
-This repository contains two sketches to synchronize the RTC on your MatrixClock. It appears that there are several clocks being produced by several companies, but that should not matter. Some of the clocks have an ESP-12S (ESP8266) and a DS3231M in them (please verify the DS3231 version). In fact, this code can be applied to any DS3231M using an ESP8266 (or any RTC chip that has a aging register correcting feature).
+This repository contains two sketches to help you calibrate the RTC on your MatrixClock. The sketches themselves DO NOT set the aging register. They will give you a suggestion on what to set it to (on the serial console only). There are several sketches out there that can help you do that. Anyway, it appears that there are several clocks being produced by several companies, but that should not matter. Some of the clocks have an ESP-12S (ESP8266) and a DS3231M in them (please verify the DS3231 version). In fact, this code can be applied to any project that contains a DS3231M and an ESP8266 (or any RTC ICs that have similar characteristics such as aging register features).
 
 If you are looking at this repository, you most likely know what you are doing. Therefore, loading firmware using an IDE or identifying your GPIO pins on your device/setup is beyond the scope of this repository.  
 
@@ -12,7 +12,7 @@ The following approaches need you to connect the SQW pin from your DS3231M to yo
 
 APPROACH I
 
-This approach contains two methods. After limited testing, both methods seem to agree most of the time and are often within +/- 1 PPM of each other. Method A seems to arrive at the suggested aging register faster. The recommendation is to run the sketch for a minimum of 24 hours; longer would be better. 
+This approach contains two methods. After limited testing, both methods seem to agree most of the time and are often within +/- 1 PPM of each other. Method A seems to arrive at the suggested aging register faster. The recommendation is to run the sketch for a minimum of 24 hours; longer would be better. The first results will be presented at around 40 minutes after start up (if your setup is stable enough, otherwise it will take longer).
   
 SQW measurement: Measures the DS3231M's 1 Hz square-wave output connected to ESP8266 GPIO12.
 
@@ -29,23 +29,6 @@ Calibration recommendations: Calculates suggested DS3231M aging-register adjustm
 Data validation: Rejects unsuitable NTP responses and applies sample-count, observation-duration, and stability requirements before issuing recommendations.
 
 Runtime data: Keeps calibration statistics in RAM, so accumulated results are lost when the ESP8266 reboots.
-
-APPROACH II
-
-The GPS PPS RTC Calibration Sketch is firmware designed to evaluate the timekeeping accuracy of a DS3231M RTC using a GPS receiver's precise 1 pulse-per-second (PPS) signal as a timing reference. The PPS signal will be connected to GPIO2. Because this is a special pin, you need to wait for the firmware to tell you that the setup is complete; only after that you make your connection to your PPS signal. This is due to the fact that the GPIO2 must be HIGH during boot. The signal from your GPS module alternates between HIGH and LOW, and if it is LOW, then your device will go into a firmware download status. This approach produces close results to the first approach, it is often within  +/- 2 PPMs. This is the approach to trust.
-
-GPS PPS measurement: Uses the GPS receiver's 1 Hz PPS signal as a precision timing reference.
-
-RTC comparison: Measures timing differences between the GPS PPS (1 Hz) signal and the DS3231M SWQ (1 Hz) signal to estimate the RTC's frequency error.
-
-Frequency calibration: Analyzes accumulated timing measurements to determine whether the RTC runs fast or slow relative to the GPS reference.
-
-Aging-register recommendations: Calculates a suggested DS3231M aging-register adjustment to compensate for measured frequency drift.
-
-Diagnostic reporting: Reports measurement results and calibration information to help evaluate RTC performance.
-
-Information is retained in RAM only.
-
 
 Approach I Configurable Variables. Default settings are recommended. 
 
@@ -114,6 +97,23 @@ SQW_RECORDING_TIMEOUT_MS       // SQW recording status timeout
 MIN_SQW_CROSSCHECK_WINDOWS     // Minimum SQW cross-check windows
 
 MAX_SQW_DIAG_PPM               // Maximum accepted SQW diagnostic drift
+
+
+APPROACH II
+
+The GPS PPS RTC Calibration Sketch is firmware designed to evaluate the timekeeping accuracy of a DS3231M RTC using a GPS receiver's precise 1 pulse-per-second (PPS) signal as a timing reference. The PPS signal will be connected to GPIO2. Because this is a special pin, you need to wait for the firmware to tell you that the setup is complete; only after that you make your connection to your PPS signal. This is due to the fact that the GPIO2 must be HIGH during boot. The signal from your GPS module alternates between HIGH and LOW, and if it is LOW, then your device will go into a firmware download status. This approach produces close results to the first approach, it is often within  +/- 2 PPMs. This is the approach to trust.
+
+GPS PPS measurement: Uses the GPS receiver's 1 Hz PPS signal as a precision timing reference.
+
+RTC comparison: Measures timing differences between the GPS PPS (1 Hz) signal and the DS3231M SWQ (1 Hz) signal to estimate the RTC's frequency error.
+
+Frequency calibration: Analyzes accumulated timing measurements to determine whether the RTC runs fast or slow relative to the GPS reference.
+
+Aging-register recommendations: Calculates a suggested DS3231M aging-register adjustment to compensate for measured frequency drift.
+
+Diagnostic reporting: Reports measurement results and calibration information to help evaluate RTC performance.
+
+Information is retained in RAM only.
 
 
 
