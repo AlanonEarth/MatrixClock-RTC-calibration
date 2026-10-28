@@ -15,24 +15,110 @@ APPROACH I
 This approach contains two methods. After limited testing, both methods seem to agree most of the time and are often within +/- 1 PPM of each other. Method A seems to arrive at the suggested aging register faster. The recommendation is to run the sketch for a minimum of 24 hours; longer would be better. 
   
 SQW measurement: Measures the DS3231M's 1 Hz square-wave output connected to ESP8266 GPIO12.
+
 NTP reference: Uses NTP timestamps to compare the RTC's behavior against network time. It does not set the ESP8266 system clock or the RTC's time.
+
 Method A — ESP TIMER vs SQW INTERVAL: Estimates ESP8266 timer-rate error and compares it with measured SQW interval error to estimate the RTC's frequency drift.
+
 Method B — NTP TIMESTAMPS vs SQW PHASE: Uses linear regression of NTP timestamps against SQW phase measurements to independently estimate RTC drift.
+
 NTP failover: Prefers the configured local NTP server and can fall back to backup servers when the preferred server is unavailable.
+
 Calibration recommendations: Calculates suggested DS3231M aging-register adjustments without writing to the register. The adjustment is a recommendation, not an automatic change.
+
 Data validation: Rejects unsuitable NTP responses and applies sample-count, observation-duration, and stability requirements before issuing recommendations.
+
 Runtime data: Keeps calibration statistics in RAM, so accumulated results are lost when the ESP8266 reboots.
 
-APPROACH 2
+APPROACH II
 
 The GPS PPS RTC Calibration Sketch is firmware designed to evaluate the timekeeping accuracy of a DS3231M RTC using a GPS receiver's precise 1 pulse-per-second (PPS) signal as a timing reference. The PPS signal will be connected to GPIO2. Because this is a special pin, you need to wait for the firmware to tell you that the setup is complete; only after that you make your connection to your PPS signal. This is due to the fact that the GPIO2 must be HIGH during boot. The signal from your GPS module alternates between HIGH and LOW, and if it is LOW, then your device will go into a firmware download status. This approach produces close results to the first approach, it is often within  +/- 2 PPMs. This is the approach to trust.
 
 GPS PPS measurement: Uses the GPS receiver's 1 Hz PPS signal as a precision timing reference.
+
 RTC comparison: Measures timing differences between the GPS PPS (1 Hz) signal and the DS3231M SWQ (1 Hz) signal to estimate the RTC's frequency error.
+
 Frequency calibration: Analyzes accumulated timing measurements to determine whether the RTC runs fast or slow relative to the GPS reference.
+
 Aging-register recommendations: Calculates a suggested DS3231M aging-register adjustment to compensate for measured frequency drift.
+
 Diagnostic reporting: Reports measurement results and calibration information to help evaluate RTC performance.
 
+Information is retained in RAM only.
+
+
+Approach I Configurable Variables. Default settings are recommended. 
+
+DS3231_SQW_PIN                 // SQW input pin
+
+I2C_SDA                        // I2C data pin
+
+I2C_SCL                        // I2C clock pin
+
+MEASURE_INTERVAL_MS            // Report/poll interval
+
+WIFI_RETRY_INTERVAL_MS         // Wi-Fi retry interval
+
+NTP_TIMEOUT_MS                 // NTP request timeout
+
+NTP_PORT                       // NTP port
+
+NTP_FAILOVER_RESCAN_MS         // Failover rescan interval
+
+PRIMARY_SERVER_PROBE_INTERVAL_MS // Primary server probe interval
+
+NTP_RATE_BACKOFF_INITIAL_MS    // Initial RATE backoff
+
+NTP_RATE_BACKOFF_MAX_MS        // Maximum RATE backoff
+
+SERVER_RESUME_MAX_CONTINUITY_RESIDUAL_SECONDS // Reject server clock jumps
+
+NTP_SERVER_COUNT               // Number of NTP servers
+
+NTP_SERVERS                    // NTP server addresses
+
+NTP_SERVER_MIN_INTERVAL_MS     // Minimum interval per server
+
+AGING_PPM_PER_STEP             // PPM per aging-register step
+
+MIN_REGRESSION_SAMPLES         // Minimum timer regression samples
+
+MAX_ESP_TIMER_DRIFT_PPM        // Maximum accepted timer drift
+
+MIN_ESP_TIMER_SPAN_SECONDS     // Minimum timer measurement span
+
+ESP_TIMER_STABILITY_TOLERANCE_PPM // Timer stability threshold
+
+ESP_TIMER_STABILITY_CHECK_SECONDS // Stability confirmation period
+
+RTC_PHASE_OUTLIER_MIN_SAMPLES  // Samples before outlier rejection
+
+RTC_PHASE_OUTLIER_MIN_SPAN_SECONDS // Span before outlier rejection
+
+MIN_RTC_RECOMMENDATION_SAMPLES // Minimum Method B samples
+
+MIN_RTC_RECOMMENDATION_SPAN_SECONDS // Minimum Method B time span
+
+MAX_RTC_PHASE_RTT_US           // Maximum accepted NTP round-trip time
+
+RTC_PHASE_OUTLIER_FLOOR_SEC    // Minimum residual threshold
+
+RTC_PHASE_OUTLIER_SIGMA_MULTIPLIER // Residual threshold multiplier
+
+SQW_DIAG_MIN_ELAPSED_US        // Minimum valid SQW diagnostic duration
+
+SQW_DIAG_MAX_ELAPSED_US        // Maximum valid SQW diagnostic duration
+
+SQW_RECORDING_TIMEOUT_MS       // SQW recording status timeout
+
+MIN_SQW_CROSSCHECK_WINDOWS     // Minimum SQW cross-check windows
+
+MAX_SQW_DIAG_PPM               // Maximum accepted SQW diagnostic drift
+
+
+
+APPROACH II Configurable variables (WORK IN PROGRESS). 
+...
 
 Credits and licenses
 
