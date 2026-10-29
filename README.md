@@ -4,11 +4,24 @@ RTC Calibration of the DS3231M contained in some MatrixClocks using NTP or a GPS
 
 This repository contains two sketches to help you calibrate the RTC on your MatrixClock. The sketches themselves DO NOT set the aging register. They will give you a suggestion on what to set it to (on the serial console only). There are several sketches out there that can help you set the Aging Register. Anyway, it appears that there are several clocks being produced by several companies, but that should not matter. Some of the clocks have an ESP-12S (ESP8266) and a DS3231M in them (please verify the DS3231 version). In fact, this code can be applied to any project that contains a DS3231M and an ESP8266 (or any RTC ICs that have similar characteristics such as aging register features).
 
+<img width="4032" height="2268" alt="2026-10-29-06-00-35-563" src="https://github.com/user-attachments/assets/014166c5-af0a-4a28-a684-59f52253cd77" />
+
+
+
 If you are looking at this repository, you most likely know what you are doing. Therefore, loading firmware using an IDE or identifying your GPIO pins on your device/setup is beyond the scope of this repository. Also, setting up your GPS module is not covered here.
 
 You might say, but I have a frequency counter, oscilloscope, etc.; I don’t need this. You are correct. These sketches are meant to be used for when you don’t have expensive lab equipment to calibrate these clocks or so that you incorporate this code into your self-correcting firmware. In my case, I have a device that will run unattended with no WiFi for a long time, and I need to squeeze the best accuracy without breaking the bank on lab equipment. 
 
 The following approaches need you to connect the SQW pin from your DS3231M to your GPIO 12 on your ESP8266.  You must use a pull-up resistor for this implementation. For the first approach, it is HIGHLY recommended to use a local NTP server. You must specify your local IP address (or your ntp.local name if your network resolves it). Running the sketch with public internet-based NTP servers is less accurate. For the second approach, we will be using a GPS PPS signal as a frequency signal generator, in essence. These GPS modules cost as little as $10 US dollars; of course you can also use other inexpensive signal generators such as the transistor testers with signal generation, etc. (I got a GM328 tester that seems OK for this, not covered here though). The PPS signal will be connected to GPIO2 (this is a bootstrap pin, see instructions on this later). 
+
+<img width="4032" height="2268" alt="2026-10-29-05-55-13-247 tmp" src="https://github.com/user-attachments/assets/c1477280-4b9c-448a-ac51-e651ed88b4da" />
+
+Nevermind the temperature sensors (DHT11s), The one at the bottom shows both connections (SQW and GPS PPS, GPIO 12 AND GPIO 2 respectively, yeah no other pins available here). The one at the bottom I got it pretty beat up by now :)
+
+<img width="1002" height="442" alt="Screenshot From 2026-10-29 06-09-59" src="https://github.com/user-attachments/assets/a0ab21fc-b634-492a-8029-af6c0b44c0be" />
+
+10KOhms resistor will do for your pull-up.
+
 
 APPROACH I
 
@@ -119,39 +132,55 @@ Information is retained in RAM only.
 Approach II Configurable Variables. Default settings are recommended.
 
 RTC_I2C_ADDRESS                   // RTC I2C address
+
 RTC_CONTROL_REGISTER              // RTC control register
+
 RTC_AGING_REGISTER                // RTC aging register
 
 GPS_PPS_PIN                       // GPS PPS input pin
+
 RTC_SQW_PIN                       // RTC SQW input pin
+
 I2C_SDA_PIN                       // I2C data pin
+
 I2C_SCL_PIN                       // I2C clock pin
 
 LED_MATRIX_DIN_PIN                // LED matrix data pin
+
 LED_MATRIX_CLK_PIN                // LED matrix clock pin
+
 LED_MATRIX_CS_PIN                 // LED matrix chip select
+
 LED_MATRIX_DEVICES                // Number of LED matrix devices
 
 INTERVALS                         // Measurement intervals
+
 SAMPLE_COUNT                      // Phase samples per window
 
 MIN_GAP_US                        // Minimum valid edge interval
+
 MAX_GAP_US                        // Maximum valid edge interval
 
 MIN_PERIOD_US                     // Minimum plausible GPS period
+
 MAX_PERIOD_US                     // Maximum plausible GPS period
+
 MAX_DRIFT_PPM                     // Maximum accepted drift
 
 PHASE_WRAP_US                     // Phase wrap period
+
 PHASE_HALF_WRAP_US                // Half phase wrap period
 
 MAX_PHASE_STEP_US                 // Maximum phase step
+
 MAX_PHASE_RESIDUAL_SIGMA_US        // Maximum residual standard deviation
+
 MAX_ABS_PHASE_RESIDUAL_US          // Maximum absolute phase residual
 
 AGING_PPM_PER_STEP                // Estimated PPM per aging-register step
 
 STATUS_INTERVAL_MS                // Status report interval
+
 MIN_WINDOWS_FOR_RECOMMENDATION    // Minimum accepted windows for recommendation
 
 CREDITS and LICENSES
