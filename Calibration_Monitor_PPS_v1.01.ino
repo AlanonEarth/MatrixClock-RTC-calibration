@@ -11,17 +11,17 @@ a serial connection). You can connect your serial pins to a USB-UART adapter for
 Do not connect your PPS signal pin to this USB-UART adapter, the pps signal does go to your ESP8266. For a better
 quality PPS signal, it is recommended to set your sat module to a timing stationary setting, instead of a moving/automotive
 setting. Some modules do not support these features. But basically, any module with a PPS pin will do but their accuracy will 
-vary in nanoseconds (we are really splitting hair here). I tested this firmware with a LEA-M8T, ATGM-336H, and GU-U7. The 
+vary in nanoseconds (we are really splitting hairs here). I tested this firmware with a LEA-M8T, ATGM-336H, and GU-U7. The 
 ATGM-336H is fine and inexpensive for this application.
 
 Disconnect GPS PPS from GPIO2 during boot. Connect your PPS signal after setup is complete. If you are loading firmware do 
-the same or you will have a hard time loading the firmware when the signal is altenating between HIGH and LOW.
+the same or you will have a hard time loading the firmware when the signal is alternating between HIGH and LOW.
 
-Confirm a GPS fix and a stable PPS signal (in some receivers, this can take 15 mins or more).
+Confirm a GPS fix and a stable PPS signal (in some modules, this can take 15 mins or more).
 Make the connection of the GPS PPS to GPIO2 immediately after you see SETUP COMPLETE after boot.
 Keep RTC SQW connected to GPIO12.
 
-You will need a min of 5 samples before you see an aging recommendation on the console. 
+You will need a min of 5 samples before you see an aging recommendation in the console. 
 
 VERY IMPORTANT: Make sure you have a common ground and a 3.3V-compatible PPS signal, DO NOT use 5V. If you power your 
 GPS antenna with 5V that is fine (this is my case with my LEA-M8T) BUT make sure the PPS signal is 3.3V.
