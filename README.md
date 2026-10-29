@@ -2,13 +2,13 @@
 RTC Calibration of the DS3231M contained in some MatrixClocks using NTP or a GPS PPS signal.
 
 
-This repository contains two sketches to help you calibrate the RTC on your MatrixClock. The sketches themselves DO NOT set the aging register. They will give you a suggestion on what to set it to (on the serial console only). There are several sketches out there that can help you set the Aging Register. Anyway, it appears that there are several clocks being produced by several companies, but that should not matter. Some of the clocks have an ESP-12S (ESP8266) and a DS3231M in them (please verify the DS3231 version). In fact, this code can be applied to any project that contains a DS3231M and an ESP8266 (or any RTC ICs that have similar characteristics such as aging register features).
+This repository contains two sketches to help you calibrate the RTC on your MatrixClock. The sketches themselves DO NOT set the aging register. They will give you a suggestion on what to set it to (in the serial console only). There are several sketches out there that can help you set the Aging Register. Anyway, it appears that there are several clocks being produced by several companies, but that should not matter. Some of the clocks have an ESP-12S (ESP8266) and a DS3231M in them (please verify the DS3231 version). In fact, this code can be applied to any project that contains a DS3231M and an ESP8266 (or any RTC ICs that have similar characteristics such as aging register features). WARNING: THIS WILL ERASE YOUR FACTORY FIRMWARE. YOU WILL NEED A COPY OF YOUR FIRMWARE IF YOU WANT YOUR CLOCK TO WORK AGAIN. There are other firmware options out there with nicer features. I have my own version that hopefully will release some day when it's fully done. Check out Steve Madden improved matrixclock version in the meantime.
 
 <img width="4032" height="2268" alt="2026-10-29-06-00-35-563" src="https://github.com/user-attachments/assets/014166c5-af0a-4a28-a684-59f52253cd77" />
 
 
 
-If you are looking at this repository, you most likely know what you are doing. Therefore, loading firmware using an IDE or identifying your GPIO pins on your device/setup is beyond the scope of this repository. Also, setting up your GPS module is not covered here.
+If you are looking at this repository, you most likely know what you are doing. Therefore, loading firmware using an IDE or identifying your GPIO pins on your device/setup is beyond the scope of this repository. Also, setting up your GPS module is not covered here. Firmware uploads are done like any other esp8266. Pay close attention to your serial SDA/SCL signal pins. I have 5 devices total with 2 of them having different assigned serial pin mappings. 
 
 You might say, but I have a frequency counter, oscilloscope, etc.; I don’t need this. You are correct. These sketches are meant to be used for when you don’t have expensive lab equipment to calibrate these clocks or so that you incorporate this code into your self-correcting firmware. In my case, I have a device that will run unattended with no WiFi for a long time, and I need to squeeze the best accuracy without breaking the bank on lab equipment. 
 
