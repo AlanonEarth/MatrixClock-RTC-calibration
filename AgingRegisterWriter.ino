@@ -47,8 +47,8 @@ void loop()
   Serial.println(F("----------------------------------------"));
   Serial.println(F("You are done. Aging register programmed."));
   Serial.println(F("Reboot and load your shiny new firmware."));
-  Serial.println(F("Don't leave this firmware loaded; otherwise, it will re-write the AG every time you reboot."));
-  Serial.println(F("Constantly re-writing the AG is not exactly recommended."));
+  Serial.println(F("Don't leave this firmware loaded; otherwise, it will re-write the AR every time you reboot."));
+  Serial.println(F("Constantly re-writing the AR is not exactly recommended."));
   Serial.println(F("----------------------------------------"));
 
   delay(10000);
