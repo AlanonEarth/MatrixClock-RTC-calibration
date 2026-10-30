@@ -1,3 +1,7 @@
+/* This a basic sketch without any safeguards. It will not ask you anyhting. You load it and it will set 
+your aging register to whatever value is specified here setDS3231MAgingOffset(XXX). It will not give you
+the current AR beforehand. */
+
 #include <Wire.h>
 
 // You must change these pins to match yours. They do change from device to device. 
@@ -39,7 +43,7 @@ void setup()
 
   Serial.println("I2C initialized");
   
-  setDS3231MAgingOffset(0); // Default is 0, change this to your desired Aging Register value.
+  setDS3231MAgingOffset(0); // You MUST hange this to your desired Aging Register value.
 }
 
 void loop()
