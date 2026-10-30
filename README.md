@@ -1,16 +1,28 @@
 # MatrixClock-RTC-calibration
-RTC Calibration of the DS3231M contained in some MatrixClocks using NTP or a GPS PPS signal.
 
+A practical calibration for the DS3231M real-time clock used in MatrixClock devices.
 
-This repository contains two sketches to help you calibrate the RTC on your MatrixClock. The sketches themselves DO NOT set the aging register. They will give you a suggestion on what to set it to (in the serial console only). There are several sketches out there that can help you set the Aging Register. Anyway, it appears that there are several clocks being produced by several companies, but that should not matter. Some of the clocks have an ESP-12S (ESP8266) and a DS3231M in them (please verify the DS3231 version). In fact, this code can be applied to any project that contains a DS3231M and an ESP8266 (or any RTC ICs that have similar characteristics such as aging register features). WARNING: THIS WILL ERASE YOUR FACTORY FIRMWARE. YOU WILL NEED A COPY OF YOUR FIRMWARE IF YOU WANT YOUR CLOCK TO WORK AGAIN. There are other firmware options out there with nicer features. I have my own version that hopefully will release some day when it's fully done. Check out Steve Madden improved matrixclock version in the meantime.
+Measure RTC frequency error and calculate aging-register corrections using two independent reference methods:
+
+  - NTP-based calibration using the ESP8266/ESP-12S that normally comes with them.
+
+  - GPS-based calibration with PPS (precision pulse-per-second) reference.
+
+Includes phase analysis, statistical regression, measurement validation, and advisory aging-register recommendations.
+
+Both methods suffer from interrupt latency, interrupt jitter, GPS receiver PPS characteristics, electrical signal quality, RTC temperature changes, etc.
+
+No automatic RTC calibration writes are performed.
+
+This repository contains two sketches to help you calibrate the RTC on your MatrixClock. The sketches themselves DO NOT set the aging register. They will give you a suggestion on what to set it to (in the serial console only). A basic Aging Register writer is included here, if you need something more advanced/more informative, you need to look for it on the net. Anyway, it appears that there are several clocks being produced by several companies, but that should not matter. Some of the clocks have an ESP-12S (ESP8266) and a DS3231M in them (please verify the DS3231 version). In fact, this code can be applied to any project that contains a DS3231M and an ESP8266 (or any RTC ICs that have similar characteristics such as aging register features). WARNING: THIS WILL ERASE YOUR FACTORY FIRMWARE. YOU WILL NEED A COPY OF YOUR FIRMWARE IF YOU WANT YOUR CLOCK TO WORK AGAIN. There are other firmware options out there with nicer features. I have my own version that hopefully will release some day when it's fully done. Check out Steve Madden improved matrixclock version in the meantime.
 
 <img width="4032" height="2268" alt="2026-10-29-06-00-35-563" src="https://github.com/user-attachments/assets/014166c5-af0a-4a28-a684-59f52253cd77" />
 
 
-If you are looking at this repository, you most likely know what you are doing. Therefore, loading firmware using an IDE or identifying your GPIO pins on your device/setup is beyond the scope of this repository. Also, setting up your GPS module is not covered here. Firmware uploads are done like any other esp8266. Pay close attention to your serial SDA/SCL signal pins. I have several devices and 2 of them have different assigned serial pin mappings. 
+If you are looking at this repository, you most likely know what you are doing. Therefore, loading firmware using an IDE or identifying your GPIO pins on your device/setup is beyond the scope of this repository. Also, setting up your GPS module is not covered here, and neither setting up a local ntp server (not that difficult). Firmware uploads are done like any other esp8266. Pay close attention to your serial SDA/SCL signal pins. I have several devices and 2 of them have different assigned serial pin mappings. 
 
 You might say, but I have a frequency counter, oscilloscope, etc.; I don’t need this. You are correct. These sketches are meant to be used for when you don’t have expensive lab equipment to calibrate these clocks or so that you incorporate this code into your self-correcting firmware. Although, with the GPS
-sketch, you could make the ultimate clock by disciplining the RTC permanently/constantly (instead of using the NTP sync). In my case, I have a device that will run unattended with no WiFi for a long time, and I need to squeeze the best accuracy without breaking the bank on lab equipment (and I don't want to permanently add a GPS module, antenna, yada yada).
+sketch, you could make the ultimate clock by disciplining the RTC permanently/constantly (instead of using the NTP sync). In my case, I have a device that will run unattended with no WiFi for a long time, and I need to squeeze the best accuracy without breaking the bank on lab equipment (and I don't want to permanently add a GPS module, antenna, yada yada). I would love to see how these sketches perform against lab equipment. I don't currently have these devices or access to them.
 
 The following approaches need you to connect the SQW pin from your DS3231M to your GPIO 12 on your ESP8266.  You must use a pull-up resistor for this implementation. For the first approach, it is HIGHLY recommended to use a local NTP server. You must specify your local IP address (or your ntp.local name if your network resolves it). Running the sketch with public internet-based NTP servers is less accurate. For the second approach, we will be using a GPS PPS signal as a frequency signal generator, in essence. These GPS modules cost as little as $10 US dollars; of course you can also use other inexpensive signal generators such as the transistor testers with signal generation, etc. (I got a GM328 tester that seems OK for this, not covered here though). The PPS signal will be connected to GPIO2 (this is a bootstrap pin, see instructions on this later). 
 
