@@ -36,7 +36,7 @@ A 10KOhms resistor will do for your pull-up.
 
 <img width="653" height="271" alt="Screenshot From 2026-10-30 02-32-48" src="https://github.com/user-attachments/assets/65ee6e3f-8b20-46d5-8437-a4ddd3d38280" />
 
-This is the default interval NTP query/sync (16 secs). If you want to run this default, I would advice you to disable the Kiss-o'-death (KOD) feature in your local server; otherwise, you will be kissed :). Luckily for you, I have incorporated a backoff timing for your queries. The firmware will query at the default until it receives a RATE signal, then it will adjust itself to a higher query timing (64 secs) until it satisfies the server's demands (hmmm... this sounds like a girlfriend). Anyway, like everything in life, there is a limit, the max backoff time is 2 hours. 
+This is the default interval NTP query/sync (16 secs). If you want to run this default, I would advice you to disable the Kiss-o'-death (KOD) feature in your local server; otherwise, you will be kissed :). Luckily for you, I have incorporated a backoff timing for your queries. The firmware will query at the default until it receives a RATE signal, then it will adjust itself to a higher query timing (64 secs) until it satisfies the server's demands (hmm... this sounds like a girlfriend :) ). Anyway, like everything in life, there is a limit, the max backoff time is 2 hours.
 
 
 APPROACH I
@@ -206,6 +206,14 @@ MIN_WINDOWS_FOR_RECOMMENDATION    // Minimum accepted windows for recommendation
 <img width="719" height="644" alt="Screenshot From 2026-10-30 02-24-35" src="https://github.com/user-attachments/assets/597d0d04-35d4-4d4c-bec6-4ef780a28ced" />
 
 1-hour run.
+
+KNOWN ISSUES
+
+There is a potential issue where the satiny check (GPS PPS sketch) and the regression slope do not agree closely.  A 10% discrepancy is OK, anything greater than that is cause for concern. The sanity check should be:
+
+Sanity check ≈ regression slope X number of intervals  +/- 10%
+
+Currently working on the issue.
 
 CREDITS and LICENSES
 
