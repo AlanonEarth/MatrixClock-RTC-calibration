@@ -2,15 +2,15 @@
 
 A practical calibration for the DS3231M real-time clock used in MatrixClock devices.
 
-Measure RTC frequency error and calculate aging-register corrections using two independent reference methods:
+Measure RTC frequency error and calculate aging-register corrections using two independent reference approaches:
 
-  - NTP-based calibration using the ESP8266/ESP-12S that normally comes with them.
+  - NTP-based calibration using the ESP8266/ESP-12S that normally comes with them (two methods).
 
   - GPS-based calibration with PPS (precision pulse-per-second) reference.
 
 Includes phase analysis, statistical regression, measurement validation, and advisory aging-register recommendations.
 
-Both methods suffer from interrupt latency, interrupt jitter, GPS receiver PPS characteristics, electrical signal quality, RTC temperature changes, etc.
+Both approaches suffer from interrupt latency, interrupt jitter (no dedicated input capture pins like other microcontrollers), esp timer drift (it mostly cancels out), GPS receiver PPS characteristics, electrical signal quality, RTC temperature changes (the biggest issue I say), etc.
 
 No automatic RTC calibration writes are performed.
 
@@ -41,7 +41,7 @@ This is the default interval NTP query/sync (16 secs). If you want to run this d
 
 APPROACH I
 
-This approach contains two methods. After limited testing, both methods seem to agree most of the time and are often within +/- 1 steps of each other. Method A seems to arrive at the suggested aging register faster. The recommendation is to run the sketch for a minimum of 24 hours; longer would be better. The first results will be presented at around 40 minutes after start up (if your setup is stable enough, otherwise it will take longer).
+This approach contains two methods. After limited testing, both methods seem to agree most of the time and are often within +/- 1 steps of each other. Method A seems to arrive at the suggested aging register faster. The recommendation is to run the sketch for a minimum of 24 hours; longer would be better. The first results will be presented at around 40 minutes after startup (if your setup is stable enough, otherwise it will take longer).
   
 SQW measurement: Measures the DS3231M's 1 Hz square-wave output connected to ESP8266 GPIO12.
 
@@ -209,9 +209,9 @@ MIN_WINDOWS_FOR_RECOMMENDATION    // Minimum accepted windows for recommendation
 
 KNOWN ISSUES
 
-There is a potential issue where the satiny check (GPS PPS sketch) and the regression slope do not agree closely.  A 10% discrepancy is OK, anything greater than that is cause for concern. The sanity check should be:
+There is a potential issue where the satiny check (GPS PPS sketch) and the regression slope do not agree closely.  A 10% discrepancy is OK, anything greater than that should be investigated. The sanity check should be:
 
-Sanity check ≈ regression slope X number of intervals  +/- 10%
+Sanity check ≈ (regression slope X number of intervals)  +/- 10%
 
 Currently working on the issue.
 
