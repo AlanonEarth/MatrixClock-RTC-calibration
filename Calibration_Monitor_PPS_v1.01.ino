@@ -9,10 +9,10 @@ you will need to know that your module has a satellite lock and a working PPS si
 a serial connection). You can connect your serial pins to a USB-UART adapter for purposes of checking a GNSS satellite fix
 (GPS/GLONASS/GALILEO/BEIDOU or any other constellation you may want to use, this is NOT restricted to GPS). 
 Do not connect your PPS signal pin to this USB-UART adapter, the pps signal does go to your ESP8266. For a better
-quality PPS signal, it is recommended to set your sat module to a timing stationary setting, instead of a moving/automotive
-setting. Some modules do not support these features. But basically, any module with a PPS pin will do but their accuracy will 
-vary in nanoseconds (we are really splitting hairs here). I tested this firmware with a LEA-M8T, ATGM-336H, and GU-U7. The 
-ATGM-336H is fine and inexpensive for this application.
+quality PPS signal, it is SUGGESTED but not necessary that you set your sat module to a timing stationary setting, instead of
+a moving/automotive setting. Some modules do not support these features. But basically, any module with a PPS pin will do but 
+their accuracy will vary in nanoseconds (we are really splitting hairs here). I tested this firmware with a LEA-M8T,
+ATGM-336H, and GU-U7. The ATGM-336H is fine and inexpensive for this application.
 
 Disconnect GPS PPS from GPIO2 during boot. Connect your PPS signal after setup is complete. If you are loading firmware do 
 the same or you will have a hard time loading the firmware when the signal is alternating between HIGH and LOW.
@@ -26,9 +26,9 @@ You will need a min of 5 samples before you see an aging recommendation in the c
 VERY IMPORTANT: Make sure you have a common ground and a 3.3V-compatible PPS signal, DO NOT use 5V. If you power your 
 GPS antenna with 5V that is fine (this is my case with my LEA-M8T) BUT make sure the PPS signal is 3.3V.
 
-In order to get the most accurate suggestion, no wifi and no LED matrix is enabled. This method suffers from micros timer, 
-timing capturing issues, temperature, etc. The ESP8266 has no dedicated input capture pins like the ESP32 does. This is 
-probably the best you can do for calibrating your RTC without expensive lab equipment.
+In order to get the most accurate suggestion, no wifi and no LED matrix is enabled. This method suffers from micros timer
+drift, timing capturing issues, temperature, etc. The ESP8266 has no dedicated input capture pins like the ESP32 does.
+This is probably the best you can do for calibrating your RTC without expensive lab equipment.
 
 USE AT YOUR OWN RISK!
 */
