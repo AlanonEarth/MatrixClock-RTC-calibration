@@ -207,13 +207,6 @@ MIN_WINDOWS_FOR_RECOMMENDATION    // Minimum accepted windows for recommendation
 
 1-hour run.
 
-KNOWN ISSUES
-
-There is a potential issue where the satiny check (GPS PPS sketch) and the regression slope do not agree closely.  A 10% discrepancy is OK, anything greater than that should be investigated. The sanity check should be:
-
-Sanity check ≈ (regression slope X number of intervals)  +/- 10%
-
-Currently working on the issue.
 
 CREDITS and LICENSES
 
